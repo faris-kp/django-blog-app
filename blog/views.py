@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.mixins import  LoginRequiredMixin,UserPassesTestMixin
-from django.views.generic import ListView,DetailView,CreateView,UpdateView
+from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
 from .models import Post
 
 # Create your views here.
@@ -42,6 +42,18 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return True
         return False
         return super().test_func()
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    success_url ='/'
+
+    def test_func(self):
+        post =self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+        return super().test_func()
+
     
     
     
